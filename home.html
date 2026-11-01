@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ra'ae project platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cormorant+Garamond:wght@600;700&family=Montserrat:wght@300;400;500;600&family=Poppins:wght@400&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   ضع صورة الخلفية في نفس فولدر الملف باسم: background.png
+   (لو اسمها أو امتدادها مختلف، غيّر المتغير --bg تحت)
+   ============================================================ */
+:root{
+  --bg: url("background.png");
+  --gold: #f0b44c;
+  --gold-light: #ffe0a0;
+  --gold-deep: #b9761f;
+  --ink: #02040c;
+  --text: #f4efe4;
+  --soft: #d9d3c4;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--ink);overflow:hidden}
+body{
+  font-family:"Poppins","Cairo",sans-serif;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* خلفية مموّهة تملا الشاشة لو نسبتها مش 16:9 */
+.bgfill{
+  position:fixed;inset:-40px;
+  background:var(--bg) center/cover no-repeat;
+  filter:blur(28px) brightness(.45) saturate(1.1);
+}
+
+.viewport{position:fixed;inset:0;overflow:hidden}
+
+/* المسرح بمقاس التصميم الأصلي 1600×900 ويتحجّم تلقائيًا */
+.stage{
+  position:absolute;left:50%;top:50%;
+  width:1600px;height:900px;
+  transform:translate(-50%,-50%) scale(var(--s,1));
+  transform-origin:center center;
+  background:var(--ink) var(--bg) center/100% 100% no-repeat;
+  overflow:hidden;
+}
+#stars{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+.hero,.stats,.nav,.cats{display:contents}
+
+/* ---------- نصوص عامة ---------- */
+.ar{font-family:"Cairo",sans-serif;font-weight:700}
+.en{font-family:"Poppins",sans-serif;font-weight:400}
+.shadow,.n,.c,.stat,.hero-text{text-shadow:0 2px 10px rgba(0,0,0,.85),0 0 3px rgba(0,0,0,.6)}
+.goldtxt{
+  background:linear-gradient(180deg,#fff1c2 0%,#f6bd55 50%,#b9761f 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  text-shadow:none;
+}
+
+/* ---------- عناصر القايمة (على المدارات) ---------- */
+.n{
+  position:absolute;
+  left:calc(var(--x) * 1px);
+  top:calc(var(--y) * 1px);
+  transform:translateX(-50%);
+  text-align:center;white-space:nowrap;
+  text-decoration:none;color:#fff;
+  animation:fadeIn .9s both;
+  z-index:2;
+}
+.n span{display:block}
+.n .ar{font-size:19px;line-height:26px;color:#fff}
+.n .en{font-size:14.5px;line-height:22px;color:var(--soft)}
+.n.sm .ar{font-size:17px}
+.n.sm .en{font-size:13.5px}
+.n.home .ar{font-size:20px}
+.n:hover .ar{color:var(--gold-light);text-shadow:0 0 14px rgba(255,180,70,.9),0 2px 8px #000}
+.n:hover .en{color:#fff;text-shadow:0 0 10px rgba(255,180,70,.7),0 2px 8px #000}
+.n:focus-visible{outline:1px dashed var(--gold);outline-offset:6px;border-radius:6px}
+
+/* ---------- اللوجو ---------- */
+.logo{
+  position:absolute;left:700px;top:72px;width:200px;height:300px;
+  z-index:2;
+  animation:pulse 5s ease-in-out infinite;
+  filter:drop-shadow(0 0 14px rgba(255,160,50,.55));
+}
+@keyframes pulse{50%{filter:drop-shadow(0 0 28px rgba(255,175,70,.9))}}
+
+.hero-text{position:absolute;left:0;width:1600px;text-align:center;z-index:2}
+.wordmark{
+  top:350px;height:44px;
+  display:flex;align-items:center;justify-content:center;gap:30px;
+  font-family:"Montserrat",sans-serif;font-weight:300;font-size:40px;
+  padding-right:6px;
+}
+.wordmark span{
+  background:linear-gradient(180deg,#ffeab0,#f2b244 60%,#c07c24);
+  -webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;
+}
+.wordmark .dot{width:4px;height:4px;border-radius:50%;background:var(--gold);margin-top:8px;box-shadow:0 0 8px var(--gold)}
+.wordmark .tick{width:2px;height:22px;background:linear-gradient(var(--gold-light),var(--gold-deep));margin:6px -8px 0 -8px}
+
+.project{
+  top:391px;line-height:18px;
+  font-family:"Montserrat",sans-serif;font-weight:400;font-size:15px;
+  letter-spacing:.62em;padding-left:.62em;color:var(--gold);
+}
+.sub{
+  top:417px;line-height:18px;
+  font-family:"Montserrat",sans-serif;font-weight:500;font-size:13px;
+  letter-spacing:.21em;color:#e9b95e;
+}
+.title{
+  top:452px;line-height:50px;
+  font-family:"Cormorant Garamond",serif;font-weight:700;font-size:42px;
+  letter-spacing:.055em;
+}
+.tag1{top:496px;line-height:30px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:28px;color:#f6efe0;letter-spacing:.02em}
+.tag2{top:526px;line-height:21px;font-family:"Cormorant Garamond",serif;font-weight:600;font-size:18px;color:#f1eadb;letter-spacing:.02em}
+
+/* ---------- الإحصائيات ---------- */
+.stat{
+  position:absolute;left:calc(var(--x) * 1px);top:578px;
+  transform:translateX(-50%);text-align:center;white-space:nowrap;z-index:2;
+  animation:fadeIn .9s both;
+}
+.stat .num{
+  display:block;font-family:"Cormorant Garamond",serif;font-weight:700;
+  font-size:34px;line-height:38px;
+}
+.stat .ar{display:block;font-size:14px;line-height:18px;color:#f0b44c}
+.stat .en{display:block;font-size:12.5px;line-height:17px;color:#f4efe4}
+.divider{
+  position:absolute;top:586px;height:62px;width:1px;z-index:2;
+  left:calc(var(--x) * 1px);
+  background:linear-gradient(transparent,rgba(240,180,76,.85),transparent);
+}
+
+/* ---------- عنوان المجموعات ---------- */
+.cats-head{position:absolute;left:0;width:1600px;text-align:center;z-index:2}
+.cats-head .ar{top:669px;font-size:23px;line-height:28px;position:absolute;left:0;width:1590px}
+.cats-head .en{top:697px;font-size:17.5px;line-height:24px;color:#f4efe4;position:absolute;left:0;width:1590px}
+.cats-head .ar,.cats-head .en{text-shadow:0 2px 10px rgba(0,0,0,.9)}
+
+/* ---------- المجموعات الـ 15 ---------- */
+.c{
+  position:absolute;
+  left:calc(var(--x) * 1px);
+  top:calc(var(--y) * 1px);
+  transform:translateX(-50%);
+  text-align:center;white-space:nowrap;z-index:2;
+  animation:fadeIn .9s both;cursor:pointer;
+}
+.c .no{
+  display:block;font-family:"Cormorant Garamond",serif;font-weight:700;
+  font-size:22px;line-height:22px;margin-bottom:2px;
+  transition:transform .25s;
+}
+.c .ar{display:block;font-size:11.5px;line-height:14px;color:#fff;font-weight:700}
+.c .en{display:block;font-size:9.5px;line-height:11.5px;color:#cfc9ba;margin-top:2px}
+.c:hover .no{transform:scale(1.25)}
+.c:hover .ar{color:var(--gold-light);text-shadow:0 0 12px rgba(255,180,70,.9),0 2px 6px #000}
+.c:hover .en{color:#fff}
+
+@keyframes fadeIn{from{opacity:0}}
+
+/* ============================================================
+   الموبايل والشاشات الصغيرة: تخطيط عمودي بدل المدارات
+   ============================================================ */
+@media (max-width: 899px){
+  html,body{height:auto;overflow:auto}
+  .bgfill{display:none}
+  .viewport{position:static;overflow:visible}
+  .stage{
+    position:relative;left:auto;top:auto;transform:none;
+    width:100%;height:auto;min-height:100vh;
+    padding:36px 16px 56px;
+    display:flex;flex-direction:column;gap:26px;
+    background:var(--ink) var(--bg) center top/cover no-repeat;
+  }
+  .hero,.stats,.nav,.cats{display:flex}
+  .hero{order:1;flex-direction:column;align-items:center;gap:6px;text-align:center}
+  .stats{order:2;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .cats-head{order:3;position:static;width:auto}
+  .nav{order:4;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .cats{order:5;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+
+  .logo{position:static;width:150px;height:225px;margin:0 auto 4px}
+  .hero-text{position:static;width:auto;left:auto;top:auto !important;height:auto}
+  .wordmark{font-size:32px;gap:22px;height:auto;margin-top:4px}
+  .project{font-size:13px}
+  .sub{font-size:11px;line-height:17px}
+  .title{font-size:30px;line-height:40px}
+  .tag1{font-size:22px;line-height:28px}
+  .tag2{font-size:16px;line-height:22px}
+
+  .divider{display:none}
+  .stat,.n,.c{
+    position:static;transform:none;left:auto;top:auto;
+    background:rgba(5,9,22,.62);
+    border:1px solid rgba(240,180,76,.28);
+    border-radius:14px;padding:12px 8px;
+    white-space:normal;
+  }
+  .stat .num{font-size:30px}
+  .n .ar{font-size:17px}
+  .n .en{font-size:13px}
+  .c .no{font-size:24px}
+  .c .ar{font-size:13px;line-height:18px}
+  .c .en{font-size:11px;line-height:14px}
+  .c .ar br,.c .en br{display:none}
+  .cats-head .ar,.cats-head .en{position:static;width:auto;text-align:center}
+  .cats-head .ar{font-size:19px;line-height:26px}
+  .cats-head .en{font-size:14px;line-height:20px;margin-top:2px}
+  #stars{position:fixed}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .logo{animation:none}
+  .n,.c,.stat{animation:none}
+}
+</style>
+</head>
+
+<body>
+<div class="bgfill"></div>
+
+<div class="viewport">
+<main class="stage" id="stage">
+  <canvas id="stars"></canvas>
+
+  <!-- ================= القايمة (على المدارات) ================= -->
+  <nav class="nav" aria-label="القائمة الرئيسية">
+    <!-- أعلى المنتصف -->
+    <a class="n home" href="#home" style="--x:802;--y:12"><span class="ar">الصفحة الرئيسية</span><span class="en">Home</span></a>
+
+    <!-- الجهة الشمال -->
+    <a class="n" href="#digital-products"  style="--x:577;--y:34"><span class="ar">المنتجات الرقمية</span><span class="en">Digital Products</span></a>
+    <a class="n" href="#calendar"          style="--x:427;--y:72"><span class="ar">التقويم الفلكي</span><span class="en">Astronomical Calendar</span></a>
+    <a class="n" href="#explore"           style="--x:276;--y:126"><span class="ar">استكشاف السماء الآن</span><span class="en">Explore the Sky Now</span></a>
+    <a class="n" href="#browse"            style="--x:204;--y:190"><span class="ar">تصفح جميع المنتجات</span><span class="en">Browse All Products</span></a>
+    <a class="n" href="#filter-type"       style="--x:160;--y:254"><span class="ar">تصفية حسب النوع</span><span class="en">Filter by Type</span></a>
+    <a class="n" href="#filter-phase"      style="--x:157;--y:322"><span class="ar">تصفية حسب الدفعة</span><span class="en">Filter by Phase</span></a>
+    <a class="n" href="#search"            style="--x:184;--y:386"><span class="ar">البحث المتقدم</span><span class="en">Advanced Search</span></a>
+    <a class="n" href="#featured"          style="--x:241;--y:442"><span class="ar">المنتجات المميزة</span><span class="en">Featured Products</span></a>
+
+    <!-- الجهة اليمين -->
+    <a class="n" href="#events"            style="--x:1008;--y:32"><span class="ar">الظواهر الفلكية</span><span class="en">Astronomical Events</span></a>
+    <a class="n" href="#research"          style="--x:1203;--y:75"><span class="ar">الأبحاث والمنشورات</span><span class="en">Research &amp; Publications</span></a>
+    <a class="n" href="#learning"          style="--x:1322;--y:129"><span class="ar">التعليم والمعرفة</span><span class="en">Learning &amp; Education</span></a>
+    <a class="n" href="#heritage"          style="--x:1394;--y:188"><span class="ar">التراث والسياحة</span><span class="en">Heritage &amp; Tourism</span></a>
+    <a class="n" href="#museums"           style="--x:1445;--y:249"><span class="ar">المتاحف والتجارب</span><span class="en">Museums &amp; Experiences</span></a>
+    <a class="n" href="#about"             style="--x:1428;--y:314"><span class="ar">عن المشروع</span><span class="en">About</span></a>
+    <a class="n" href="#new"               style="--x:1402;--y:373"><span class="ar">الجديد</span><span class="en">What's New</span></a>
+    <a class="n" href="#favorites"         style="--x:1363;--y:428"><span class="ar">المفضلة</span><span class="en">Favorites</span></a>
+    <a class="n sm" href="#pathways"       style="--x:1302;--y:474"><span class="ar">مسارات متخصصة</span><span class="en">Curated Pathways</span></a>
+    <a class="n sm" href="#quick"          style="--x:1210;--y:516"><span class="ar">أدوات سريعة</span><span class="en">Quick Access</span></a>
+  </nav>
+
+  <!-- ================= المنتصف: اللوجو والعناوين ================= -->
+  <section class="hero" id="home">
+    <svg class="logo" viewBox="0 0 200 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ra'ae project logo">
+      <defs>
+        <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#fff3c8"/>
+          <stop offset=".35" stop-color="#ffcf6b"/>
+          <stop offset=".72" stop-color="#e29a2c"/>
+          <stop offset="1" stop-color="#9a5c14"/>
+        </linearGradient>
+        <radialGradient id="sun" cx=".5" cy=".5" r=".5">
+          <stop offset="0" stop-color="#fffbe8"/>
+          <stop offset=".45" stop-color="#ffd37a"/>
+          <stop offset="1" stop-color="#f09a2a"/>
+        </radialGradient>
+        <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+          <feGaussianBlur stdDeviation="5"/>
+        </filter>
+      </defs>
+
+      <!-- هالة الشمس -->
+      <circle cx="100" cy="64" r="24" fill="#ffb540" opacity=".55" filter="url(#soft)"/>
+
+      <!-- القرنان / الحلقة -->
+      <path d="M56 120 C28 88 38 26 100 12 C162 26 172 88 144 120" fill="none" stroke="url(#g1)" stroke-width="9" stroke-linecap="round"/>
+      <path d="M70 112 C52 88 58 46 100 36 C142 46 148 88 130 112" fill="none" stroke="url(#g1)" stroke-width="3.5" stroke-linecap="round" opacity=".9"/>
+      <path d="M56 120 C62 134 80 138 90 130" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+      <path d="M144 120 C138 134 120 138 110 130" fill="none" stroke="url(#g1)" stroke-width="6" stroke-linecap="round"/>
+
+      <!-- قرص الشمس والهلال -->
+      <circle cx="100" cy="62" r="13" fill="url(#sun)"/>
+      <path d="M77 78 A25 25 0 0 0 123 78" fill="none" stroke="url(#g1)" stroke-width="4" stroke-linecap="round"/>
+
+      <!-- العمود -->
+      <path d="M100 84 L96 100 H104 Z" fill="url(#g1)"/>
+      <rect x="95.5" y="100" width="3.2" height="192" fill="url(#g1)"/>
+      <rect x="101.3" y="100" width="3.2" height="192" fill="url(#g1)"/>
+
+      <!-- القضبان الأفقية -->
+      <g fill="url(#g1)">
+        <rect x="58" y="178" width="38" height="8" rx="2"/><rect x="104" y="178" width="38" height="8" rx="2"/>
+        <rect x="58" y="195" width="38" height="8" rx="2"/><rect x="104" y="195" width="38" height="8" rx="2"/>
+        <rect x="58" y="212" width="38" height="8" rx="2"/><rect x="104" y="212" width="38" height="8" rx="2"/>
+        <rect x="58" y="229" width="38" height="8" rx="2"/><rect x="104" y="229" width="38" height="8" rx="2"/>
+      </g>
+    </svg>
+
+    <div class="hero-text wordmark" aria-label="ra ae">
+      <span>r</span><span>a</span><b class="dot"></b><b class="tick"></b><span>a</span><span>e</span>
+    </div>
+    <div class="hero-text project">PROJECT</div>
+    <div class="hero-text sub">RESEARCH IN ARCHAEOASTRONOMY,<br>ARCHITECTURE AND EGYPTOLOGY</div>
+    <h1 class="hero-text title goldtxt">ra'ae project platform</h1>
+    <div class="hero-text tag1">.. the sky, written in stone,</div>
+    <div class="hero-text tag2">reconstructing the ancient Egyptian cosmos to reveal<br>how the sky shaped ancient egypt</div>
+  </section>
+
+  <!-- ================= الإحصائيات ================= -->
+  <section class="stats" aria-label="إحصائيات">
+    <div class="stat" style="--x:528"><span class="num goldtxt" data-count="301">301</span><span class="ar">إجمالي المنتجات</span><span class="en">Total Products</span></div>
+    <div class="stat" style="--x:708"><span class="num goldtxt" data-count="80">80</span><span class="ar">من خريطة المنتجات</span><span class="en">Products in Core Map</span></div>
+    <div class="stat" style="--x:888"><span class="num goldtxt" data-count="221">221</span><span class="ar">منتجات مقترحة جديدة</span><span class="en">Proposed Products</span></div>
+    <div class="stat" style="--x:1053"><span class="num goldtxt" data-count="15">15</span><span class="ar">مجموعات رئيسية</span><span class="en">Main Categories</span></div>
+    <i class="divider" style="--x:617"></i>
+    <i class="divider" style="--x:798"></i>
+    <i class="divider" style="--x:975"></i>
+  </section>
+
+  <!-- ================= عنوان المجموعات ================= -->
+  <div class="cats-head">
+    <div class="ar goldtxt" style="text-shadow:none">(15) المجموعات الرئيسية للمنتجات الرقمية</div>
+    <div class="en">Digital Product Categories&nbsp; (15 Main Categories)</div>
+  </div>
+
+  <!-- ================= المجموعات (على المدار السفلي) ================= -->
+  <section class="cats" aria-label="المجموعات الرئيسية">
+    <div class="c" style="--x:108;--y:640"><span class="no goldtxt">01</span><span class="ar">السماء التاريخية<br>وإعادة البناء البصري</span><span class="en">Historical Skies &amp;<br>Visual Reconstructions</span></div>
+    <div class="c" style="--x:202;--y:680"><span class="no goldtxt">02</span><span class="ar">الأبحاث<br>والمنشورات العلمية</span><span class="en">Research &amp;<br>Scientific<br>Publications</span></div>
+    <div class="c" style="--x:292;--y:700"><span class="no goldtxt">03</span><span class="ar">الأطلس الرقمي<br>والاستكشاف التفاعلي</span><span class="en">Digital Atlases &amp;<br>Interactive<br>Exploration</span></div>
+    <div class="c" style="--x:378;--y:717"><span class="no goldtxt">04</span><span class="ar">التعليم<br>والمعرفة</span><span class="en">Learning &amp;<br>Education</span></div>
+    <div class="c" style="--x:464;--y:726"><span class="no goldtxt">05</span><span class="ar">التراث الثقافي<br>والسياحة</span><span class="en">Cultural Heritage<br>&amp; Tourism</span></div>
+    <div class="c" style="--x:553;--y:734"><span class="no goldtxt">06</span><span class="ar">المتاحف<br>والتجارب الغامرة</span><span class="en">Museums &amp;<br>Immersive<br>Experiences</span></div>
+    <div class="c" style="--x:643;--y:739"><span class="no goldtxt">07</span><span class="ar">الفنون الرقمية<br>والمقتنيات</span><span class="en">Digital Art &amp;<br>Collectibles</span></div>
+    <div class="c" style="--x:750;--y:740"><span class="no goldtxt">08</span><span class="ar">الأدوات المهنية<br>والتراخيص المؤسسية</span><span class="en">Professional Tools &amp;<br>Institutional<br>Licensing</span></div>
+    <div class="c" style="--x:864;--y:742"><span class="no goldtxt">09</span><span class="ar">النصوص الأثرية<br>والمعرفة الذكية</span><span class="en">Ancient Texts &amp;<br>Knowledge AI</span></div>
+    <div class="c" style="--x:965;--y:736"><span class="no goldtxt">10</span><span class="ar">العمارة<br>والهندسة الرقمية</span><span class="en">Architecture &amp;<br>Digital<br>Engineering</span></div>
+    <div class="c" style="--x:1051;--y:731"><span class="no goldtxt">11</span><span class="ar">الترفيه<br>والسرد</span><span class="en">Entertainment<br>&amp; Storytelling</span></div>
+    <div class="c" style="--x:1136;--y:721"><span class="no goldtxt">12</span><span class="ar">المجتمع<br>العلمي والنشر</span><span class="en">Scientific<br>Community &amp;<br>Publishing</span></div>
+    <div class="c" style="--x:1224;--y:709"><span class="no goldtxt">13</span><span class="ar">التحليلات<br>والتوطين<br>ودعم الخدمات</span><span class="en">Localization<br>&amp; Support</span></div>
+    <div class="c" style="--x:1306;--y:694"><span class="no goldtxt">14</span><span class="ar">التحليلات<br>ودعم الخدمات</span><span class="en">Analytics,<br>Localization<br>&amp; Support</span></div>
+    <div class="c" style="--x:1388;--y:680"><span class="no goldtxt">14</span><span class="ar">الهدايا<br>والمنتجات التذكارية</span><span class="en">Gifts &amp;<br>Souvenirs</span></div>
+    <div class="c" style="--x:1486;--y:640"><span class="no goldtxt">15</span><span class="ar">السماء في التقويم<br>المصري القديم<br>والأحداث التاريخية</span><span class="en">Sky in the Ancient<br>Egyptian Calendar<br>&amp; Historical Events</span></div>
+  </section>
+</main>
+</div>
+
+<script>
+(function () {
+  var stage = document.getElementById('stage');
+  var DESIGN_W = 1600, DESIGN_H = 900;
+
+  /* تحجيم المسرح ليناسب الشاشة (على الكمبيوتر والتابلت) */
+  function fit() {
+    if (window.innerWidth < 900) { stage.style.removeProperty('--s'); return; }
+    var s = Math.min(window.innerWidth / DESIGN_W, window.innerHeight / DESIGN_H);
+    stage.style.setProperty('--s', s);
+  }
+  window.addEventListener('resize', fit);
+  fit();
+
+  /* ظهور تدريجي متتابع للعناصر */
+  var items = document.querySelectorAll('.n, .stat, .c');
+  items.forEach(function (el, i) { el.style.animationDelay = (0.15 + i * 0.04) + 's'; });
+
+  /* عدّاد الأرقام */
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  document.querySelectorAll('[data-count]').forEach(function (el) {
+    var target = +el.dataset.count;
+    if (reduce) return;
+    var start = null, dur = 1600;
+    el.textContent = '0';
+    function step(t) {
+      if (!start) start = t;
+      var p = Math.min((t - start) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(step);
+    }
+    setTimeout(function () { requestAnimationFrame(step); }, 500);
+  });
+
+  /* نجوم بتلمع خفيف فوق الخلفية */
+  var canvas = document.getElementById('stars');
+  var ctx = canvas.getContext('2d');
+  var stars = [];
+  function sizeCanvas() {
+    canvas.width = canvas.clientWidth;
+    canvas.height = canvas.clientHeight;
+    stars = [];
+    var n = Math.round((canvas.width * canvas.height) / 9000);
+    for (var i = 0; i < n; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.1 + 0.3,
+        ph: Math.random() * Math.PI * 2,
+        sp: Math.random() * 0.002 + 0.0008
+      });
+    }
+  }
+  function draw(t) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (var i = 0; i < stars.length; i++) {
+      var s = stars[i];
+      var a = 0.25 + 0.5 * (0.5 + 0.5 * Math.sin(t * s.sp + s.ph));
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(255,240,215,' + a.toFixed(3) + ')';
+      ctx.arc(s.x, s.y, s.r, 0, 6.2832);
+      ctx.fill();
+    }
+    if (!reduce) requestAnimationFrame(draw);
+  }
+  sizeCanvas();
+  window.addEventListener('resize', sizeCanvas);
+  requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
