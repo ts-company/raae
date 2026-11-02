@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ra’ae project platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;600&family=Spectral:wght@300;400&family=Noto+Sans+Egyptian+Hieroglyphs&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;--bg:#000;--fg:#ece6d6;--mut:#9aa0b0;--gold:#d9a441;--lapis:#6c93d6;--line:rgba(236,230,214,.16);--star:255,246,228;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:calc(72px + env(safe-area-inset-top,0px));scroll-behavior:smooth}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Sans Arabic",system-ui,sans-serif;font-weight:300;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+a:focus-visible{outline:1px solid var(--gold);outline-offset:4px}
+.serif{font-family:Spectral,Georgia,serif;font-weight:300}
+.hi{font-family:"Noto Sans Egyptian Hieroglyphs",serif;color:var(--gold)}
+#stars{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+main,header,footer{position:relative;z-index:1}
+
+header{position:fixed;top:0;left:0;right:0;z-index:5;padding:calc(env(safe-area-inset-top,0px) + 18px) 32px 18px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(var(--bg),transparent)}
+header .brand{font-family:Spectral,serif;font-size:20px;letter-spacing:.02em;display:flex;gap:10px;align-items:center}
+header .brand img{height:32px;width:auto;display:block}
+header nav{display:flex;gap:32px;font-size:14px;color:var(--mut)}
+header nav a{transition:color .2s}header nav a:hover{color:var(--fg)}
+@media(max-width:700px){header{padding-inline:20px}header nav{display:none}}
+
+/* hero */
+.hero{min-height:100svh;display:grid;place-items:center;text-align:center;padding:110px 24px 70px;position:relative}
+.orbit{height:clamp(90px,16vw,130px);position:relative;margin:0 auto 22px}.logo-hero{height:100%;width:auto;max-width:70vw;display:block;margin:0 auto;opacity:0;animation:logo-appear 2s .9s ease-out forwards}
+.orbit svg{width:100%;height:100%;overflow:visible}
+.ring{fill:none;stroke:var(--line);stroke-width:1;stroke-dasharray:1200;stroke-dashoffset:1200;animation:draw 2.6s cubic-bezier(.3,.6,.2,1) forwards}
+.ring:nth-of-type(2){animation-delay:.25s}.ring:nth-of-type(3){animation-delay:.5s}.ring:nth-of-type(4){animation-delay:.75s}
+@keyframes draw{to{stroke-dashoffset:0}}
+.sat{transform-origin:200px 200px;opacity:0;animation:spin var(--t) linear infinite,show 1s 1.8s forwards}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes show{to{opacity:1}}
+.sun{position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(44px,9vw,64px);opacity:0;animation:ignite 2s .9s ease-out forwards}
+@keyframes ignite{from{opacity:0;filter:blur(10px) drop-shadow(0 0 0 transparent)}to{opacity:1;filter:blur(0) drop-shadow(0 0 22px var(--gold))}}
+@keyframes logo-appear{from{opacity:0;filter:blur(10px)}to{opacity:1;filter:blur(0)}}
+.hero h1{font-family:Spectral,serif;font-weight:300;font-size:clamp(34px,6vw,62px);letter-spacing:.01em;line-height:1.1;opacity:0;animation:show 1.4s 1.9s forwards}
+.hero .ar{font-size:clamp(17px,2.4vw,22px);color:var(--gold);margin-top:10px;opacity:0;animation:show 1.4s 2.2s forwards}
+.hero p{max-width:46ch;margin:22px auto 0;color:var(--mut);font-size:16px;opacity:0;animation:show 1.4s 2.5s forwards}
+.cue{position:absolute;bottom:26px;left:50%;width:1px;height:46px;background:linear-gradient(var(--gold),transparent);opacity:0;animation:show 1s 3.2s forwards,cue 2.4s 3.2s ease-in-out infinite}
+@keyframes cue{50%{transform:translateY(8px)}}
+
+/* sections */
+section{position:relative;padding:130px 32px;max-width:1120px;margin:0 auto}
+.statement{text-align:center;padding-top:150px}
+.glyphs{display:flex;justify-content:center;gap:clamp(14px,4vw,40px);font-size:clamp(30px,6vw,52px);margin-bottom:46px}
+.glyphs span{opacity:0;filter:blur(8px);transition:opacity 1s,filter 1s;transition-delay:calc(var(--i)*.22s)}
+.in .glyphs span{opacity:1;filter:blur(0)}
+.statement h2{font-family:Spectral,serif;font-weight:300;font-size:clamp(26px,4vw,40px);line-height:1.3;max-width:24ch;margin:0 auto}
+.statement .ar{color:var(--gold);margin-top:18px;font-size:19px}
+.statement p{color:var(--mut);max-width:52ch;margin:22px auto 0}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line);padding:0;max-width:960px}
+.stat{padding:44px 12px;text-align:center}
+.stat+.stat{border-inline-start:1px solid var(--line)}
+.stat b{display:block;font-family:Spectral,serif;font-weight:300;font-size:clamp(34px,5vw,54px);line-height:1.1}
+.stat span{display:block;color:var(--mut);font-size:13px;margin-top:6px}
+.stat em{display:block;font-style:normal;color:var(--gold);font-size:13px}
+@media(max-width:700px){.stats{grid-template-columns:1fr 1fr}.stat:nth-child(3){border-inline-start:0}.stat:nth-child(n+3){border-top:1px solid var(--line)}}
+
+.head{display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap;margin-bottom:46px}
+.head h2{font-family:Spectral,serif;font-weight:300;font-size:clamp(26px,4vw,38px)}
+.head .ar{color:var(--gold);font-size:19px}
+.cats{display:grid;grid-template-columns:repeat(3,1fr);column-gap:44px}
+.cat{display:flex;gap:18px;align-items:flex-start;padding:22px 0;border-top:1px solid var(--line);opacity:0;transition:opacity .9s,border-color .3s;transition-delay:calc(var(--i)*.06s)}
+.cat .hi{font-size:30px;line-height:1;width:34px;flex:none;filter:blur(6px);transition:filter .9s;transition-delay:calc(var(--i)*.06s + .2s)}
+.in .cat{opacity:1}.in .cat .hi{filter:blur(0)}
+.cat:hover{border-color:var(--gold)}
+.cat h3{font-size:16px;font-weight:600;line-height:1.5}
+.cat p{font-size:13px;color:var(--mut);line-height:1.5;margin-top:2px}
+@media(max-width:900px){.cats{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.cats{grid-template-columns:1fr}section{padding:90px 22px}}
+
+.paths{display:grid;grid-template-columns:repeat(2,1fr);gap:0 44px}
+.paths a{display:flex;justify-content:space-between;align-items:baseline;padding:26px 0;border-top:1px solid var(--line);font-family:Spectral,serif;font-size:24px;transition:color .25s,padding .25s}
+.paths a small{font-family:"IBM Plex Sans Arabic",sans-serif;font-size:14px;color:var(--mut)}
+.paths a:hover{color:var(--gold);padding-inline-start:10px}
+@media(max-width:700px){.paths{grid-template-columns:1fr}}
+footer{max-width:1120px;margin:0 auto;padding:60px 32px calc(60px + env(safe-area-inset-bottom,0px));border-top:1px solid var(--line);color:var(--mut);font-size:13px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+
+/* planets */
+.planet{position:absolute;border-radius:50%;pointer-events:none;opacity:0;transition:opacity 1.6s;will-change:transform}
+.in .planet,.planet.in{opacity:1}
+.p1{width:200px;height:200px;right:-70px;top:60px;background:radial-gradient(circle at 32% 30%,#f6d48a,#c4862c 52%,#4a2c0c);box-shadow:inset -26px -18px 50px rgba(0,0,0,.6),0 0 70px rgba(217,164,65,.2)}
+.p2{width:120px;height:120px;left:-40px;top:40%;background:radial-gradient(circle at 32% 30%,#a9c3f0,#3f6fb5 55%,#101e3c);box-shadow:inset -18px -12px 36px rgba(0,0,0,.6),0 0 50px rgba(108,147,214,.18)}
+.p2::after{content:"";position:absolute;left:-45%;top:44%;width:190%;height:12%;border:1px solid rgba(169,195,240,.5);border-radius:50%;transform:rotate(-16deg)}
+.p3{width:56px;height:56px;right:12%;top:10px;background:radial-gradient(circle at 34% 30%,#e8e4da,#8d8a82 60%,#2c2b28);box-shadow:inset -8px -6px 16px rgba(0,0,0,.55)}
+@media(max-width:700px){.p1{width:130px;height:130px;right:-60px}.p2{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.ring{stroke-dashoffset:0}.sat,.sun,.logo-hero,.hero h1,.hero .ar,.hero p,.cue,.glyphs span,.cat,.planet{opacity:1!important;filter:none!important}}
+</style>
+</head>
+<body>
+<canvas id="stars" aria-hidden="true"></canvas>
+
+<header>
+  <a class="brand" href="#top"><img src="static/logo.png" alt="" onerror="this.style.visibility='hidden'">RA’AE</a>
+  <nav aria-label="Main">
+    <a href="#products">Products</a><a href="#paths">Sky now</a><a href="#paths">Calendar</a><a href="#paths">Research</a><a href="#about">About</a>
+  </nav>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div>
+      <div class="orbit"><img class="logo-hero" src="static/logo.png" alt="ra’ae project logo" onerror="this.style.visibility='hidden'"></div>
+      <h1>RA’AE</h1>
+      <p>The sky, written in stone. Reconstructing the ancient Egyptian cosmos to show how the heavens shaped Egypt.</p>
+    </div>
+    <div class="cue"></div>
+  </div>
+
+  <section class="statement reveal" id="about">
+    <div class="planet p3"></div>
+    <div class="glyphs hi" aria-hidden="true"><span style="--i:0">𓇯</span><span style="--i:1">𓇼</span><span style="--i:2">𓇳</span><span style="--i:3">𓁹</span><span style="--i:4">𓏏</span></div>
+    <h2>Research in archaeoastronomy, architecture and Egyptology.</h2>
+    <div class="ar" lang="ar" dir="rtl">أبحاث في علم الفلك الأثري والعمارة وعلم المصريات</div>
+    <p>Explore reconstructed skies, ancient texts and monuments in one place, and the digital products built from them.</p>
+    <div class="planet p1" data-s=".06"></div>
+  </section>
+
+  <section class="stats reveal" aria-label="Platform figures">
+    <div class="stat"><b data-n="301">301</b><span>Total products</span><em lang="ar">إجمالي المنتجات</em></div>
+    <div class="stat"><b data-n="80">80</b><span>In the core map</span><em lang="ar">من خريطة المنتجات</em></div>
+    <div class="stat"><b data-n="221">221</b><span>Newly proposed</span><em lang="ar">منتجات مقترحة</em></div>
+    <div class="stat"><b data-n="15">15</b><span>Categories</span><em lang="ar">مجموعات رئيسية</em></div>
+  </section>
+
+  <section class="reveal" id="products">
+    <div class="planet p2" data-s="-.05"></div>
+    <div class="head"><h2>Digital product categories</h2><div class="ar" lang="ar" dir="rtl">المجموعات الرئيسية للمنتجات الرقمية</div></div>
+    <div class="cats" id="cats"></div>
+  </section>
+
+  <section class="reveal" id="paths">
+    <div class="head"><h2>Start exploring</h2><div class="ar" lang="ar" dir="rtl">ابدأ الاستكشاف</div></div>
+    <div class="paths">
+      <a href="#sky"><span>Explore the sky now</span><small lang="ar">استكشاف السماء الآن</small></a>
+      <a href="#calendar"><span>Astronomical calendar</span><small lang="ar">التقويم الفلكي</small></a>
+      <a href="#research"><span>Research &amp; publications</span><small lang="ar">الأبحاث والمنشورات</small></a>
+      <a href="#heritage"><span>Heritage &amp; tourism</span><small lang="ar">التراث والسياحة</small></a>
+    </div>
+  </section>
+</main>
+
+<footer><span>RA’AE</span><span>Research in Archaeoastronomy, Architecture and Egyptology</span></footer>
+
+<script>
+(function(){
+  var cats=[
+    ["𓇯","السماء التاريخية وإعادة البناء البصري","Historical skies & visual reconstructions"],
+    ["𓁹","الأبحاث والمنشورات العلمية","Research & scientific publications"],
+    ["𓇼","الأطلس الرقمي والاستكشاف التفاعلي","Digital atlases & interactive exploration"],
+    ["𓏏","التعليم والمعرفة","Learning & education"],
+    ["𓊖","التراث الثقافي والسياحة","Cultural heritage & tourism"],
+    ["𓉐","المتاحف والتجارب الغامرة","Museums & immersive experiences"],
+    ["𓆣","الفنون الرقمية والمقتنيات","Digital art & collectibles"],
+    ["𓋹","الأدوات المهنية والتراخيص المؤسسية","Professional tools & institutional licensing"],
+    ["𓂀","النصوص الأثرية والمعرفة الذكية","Ancient texts & knowledge AI"],
+    ["𓊪","العمارة والهندسة الرقمية","Architecture & digital engineering"],
+    ["𓃭","الترفيه والسرد","Entertainment & storytelling"],
+    ["𓅓","المجتمع العلمي والنشر","Scientific community & publishing"],
+    ["𓈖","التحليلات والتوطين ودعم الخدمات","Analytics, localization & support"],
+    ["𓐍","الهدايا والمنتجات التذكارية","Gifts & souvenirs"],
+    ["𓇳","السماء في التقويم المصري القديم والأحداث التاريخية","Sky in the ancient Egyptian calendar & historical events"]
+  ];
+  var box=document.getElementById("cats");
+  cats.forEach(function(c,i){
+    var d=document.createElement("div");d.className="cat";d.style.setProperty("--i",i);
+    d.innerHTML='<span class="hi" aria-hidden="true">'+c[0]+'</span><div><h3 lang="ar" dir="rtl">'+c[1]+'</h3><p>'+c[2].replace("&","&amp;")+'</p></div>';
+    box.appendChild(d);
+  });
+
+  var reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+    if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);
+      e.target.querySelectorAll("[data-n]").forEach(count);}
+  })},{threshold:.18});
+  document.querySelectorAll(".reveal").forEach(function(el){io.observe(el)});
+
+  function count(el){
+    var t=+el.dataset.n;if(reduce){return}
+    var s=null;
+    function f(ts){if(!s)s=ts;var p=Math.min((ts-s)/1500,1);el.textContent=Math.round(t*(1-Math.pow(1-p,3)));if(p<1)requestAnimationFrame(f)}
+    el.textContent="0";requestAnimationFrame(f);
+  }
+
+  /* gentle planet parallax */
+  var pl=[].slice.call(document.querySelectorAll(".planet[data-s]"));
+  function par(){var h=innerHeight;pl.forEach(function(p){var r=p.parentNode.getBoundingClientRect();
+    p.style.transform="translateY("+((r.top+r.height/2-h/2)*p.dataset.s*-1)+"px)"})}
+  if(!reduce){addEventListener("scroll",par,{passive:true});par()}
+  document.querySelectorAll(".planet:not([data-s])").forEach(function(p){p.classList.add("in")});
+
+  /* quiet starfield */
+  var cv=document.getElementById("stars"),cx=cv.getContext("2d"),st=[];
+  function size(){cv.width=innerWidth;cv.height=innerHeight;st=[];
+    for(var i=0;i<Math.round(cv.width*cv.height/4200);i++)st.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*Math.random()*1.5+.3,p:Math.random()*6.28,v:Math.random()*.0015+.0005})}
+  function draw(t){
+    var c=getComputedStyle(document.documentElement).getPropertyValue("--star").trim()||"255,240,215";
+    cx.clearRect(0,0,cv.width,cv.height);
+    st.forEach(function(s){var a=.25+.65*(.5+.5*Math.sin(t*s.v+s.p));
+      cx.fillStyle="rgba("+c+","+a.toFixed(2)+")";cx.beginPath();cx.arc(s.x,s.y,s.r,0,6.2832);cx.fill()});
+    if(!reduce)requestAnimationFrame(draw)}
+  size();addEventListener("resize",size);requestAnimationFrame(draw);
+})();
+</script>
+</body>
+</html>
