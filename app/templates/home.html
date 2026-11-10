@@ -165,7 +165,7 @@
       left: 0;
       right: 0;
       z-index: 30;
-      padding: 18px 0 14px;
+      padding: 20px 0 0;
       transition: background 350ms ease, box-shadow 350ms ease, backdrop-filter 350ms ease, transform 350ms ease;
       transform: translateY(-8px);
       opacity: 0;
@@ -182,95 +182,185 @@
       box-shadow: inset 0 -1px 0 rgba(212, 175, 55, 0.15);
     }
 
+    .site-header::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 94px;
+      height: 2px;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.16) 35%, rgba(255, 215, 0, 0.8) 50%, rgba(212, 175, 55, 0.16) 65%, transparent);
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.55);
+    }
+
     .nav-shell {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 20px;
-      max-width: 1200px;
-      width: min(1200px, calc(100% - 40px));
+      max-width: 1680px;
+      width: calc(100% - 48px);
+      min-height: 88px;
       margin: 0 auto;
-      padding: 12px 18px 12px 20px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 10px 28px;
+      border: 0;
       border-radius: 999px;
-      background: rgba(8, 12, 17, 0.24);
-      backdrop-filter: blur(10px);
-      box-shadow: 0 22px 50px rgba(0, 0, 0, 0.14);
+      background: rgba(5, 9, 13, 0.94);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 8px 26px rgba(0, 0, 0, 0.18);
     }
 
-    .brand {
+    .site-header .brand {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      font-family: "Spectral", Georgia, serif;
-      font-size: 1.2rem;
-      letter-spacing: 0.08em;
+      gap: 14px;
+      flex: 0 0 290px;
+      min-width: 290px;
+      align-self: stretch;
+      padding-right: 24px;
       color: var(--gold-soft);
-      text-transform: uppercase;
-      text-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
       line-height: 1;
     }
 
-    .brand img {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
+    .site-header .brand img {
+      width: 36px;
+      height: 58px;
       object-fit: contain;
       object-position: center;
-      background: rgba(0, 0, 0, 0.12);
-      filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.34));
+      filter: drop-shadow(0 0 6px rgba(212, 175, 55, 0.32));
+      flex-shrink: 0;
+    }
+
+    .site-header .brand-copy {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      font-family: "Spectral", Georgia, serif;
+      letter-spacing: 0.08em;
+      text-transform: lowercase;
+      text-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
+    }
+
+    .site-header .brand-copy .brand-name {
+      font-size: 1.55rem;
+      line-height: 1;
+      color: #f7e9c3;
+    }
+
+    .site-header .brand-copy .brand-sub {
+      font-size: 0.78rem;
+      line-height: 1;
+      letter-spacing: 0.1em;
+      color: rgba(246, 241, 232, 0.7);
+      text-transform: uppercase;
     }
 
     .main-nav {
       display: flex;
       align-items: center;
-      gap: clamp(16px, 2vw, 30px);
-      font-size: 0.92rem;
+      justify-content: center;
+      flex: 1;
+      flex-wrap: nowrap;
+      gap: 18px;
+      font-size: 1.08rem;
       color: var(--muted);
     }
 
-    .main-nav a {
+    .nav-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 11px;
+      min-height: 58px;
+      padding: 12px 10px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--muted);
+      transition: all var(--transition);
+      text-transform: none;
+      white-space: nowrap;
       position: relative;
-      transition: color var(--transition), transform var(--transition);
+      box-shadow: none;
     }
 
-    .main-nav a::after {
+    .nav-item::after {
       content: "";
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -8px;
-      width: 100%;
+      left: 8px;
+      right: 8px;
+      bottom: 1px;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
       opacity: 0;
-      transform: scaleX(0.4);
-      transition: opacity var(--transition), transform var(--transition);
+      transition: opacity var(--transition);
     }
 
-    .main-nav a:hover,
-    .main-nav a:focus-visible {
-      color: var(--text);
-      transform: translateY(-1px);
+    .nav-item .nav-icon {
+      font-size: 1.55rem;
+      color: var(--gold-soft);
+      opacity: 0.9;
     }
 
-    .main-nav a:hover::after,
-    .main-nav a:focus-visible::after {
+    .nav-item:hover,
+    .nav-item:focus-visible,
+    .nav-item.active {
+      color: #fff9eb;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .nav-item:hover::after,
+    .nav-item:focus-visible::after,
+    .nav-item.active::after {
       opacity: 1;
-      transform: scaleX(1);
+    }
+
+    .nav-tools {
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding-left: 22px;
+    }
+
+    .tool-btn {
+      width: 48px;
+      height: 48px;
+      display: inline-grid;
+      place-items: center;
+      border: 0;
+      background: transparent;
+      color: var(--gold-soft);
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1.65rem;
+    }
+
+    .login-btn svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: currentColor;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      stroke-width: 1.6;
     }
 
     .menu-toggle {
-      display: none;
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      background: rgba(12, 17, 22, 0.7);
-      color: var(--text);
-      border-radius: 999px;
-      padding: 9px 14px;
+      display: inline-grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--gold-soft);
+      border-radius: 50%;
       cursor: pointer;
-      font-size: 0.82rem;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
+      font-size: 1.6rem;
+      line-height: 1;
     }
 
     .hero {
@@ -289,7 +379,7 @@
       inset: 0;
       background:
         linear-gradient(180deg, rgba(4, 8, 12, 0.45), rgba(4, 8, 12, 0.18), rgba(4, 8, 12, 0.7)),
-        url("/static/Cosmic%20Earth%20with%20Golden%20Orbits.png") center/cover no-repeat;
+        url("/static/background.jpg") center/cover no-repeat;
       filter: saturate(1.15) contrast(1.05);
       transform: scale(1.06);
       z-index: -2;
@@ -305,49 +395,99 @@
 
     .hero-inner {
       display: grid;
-      grid-template-columns: 1.08fr 0.92fr;
+      grid-template-columns: 1fr;
       align-items: center;
-      gap: 28px;
-      padding-top: 120px;
-      padding-bottom: 70px;
+      justify-items: center;
+      gap: 0;
+      padding-top: 130px;
+      padding-bottom: 90px;
     }
 
     .hero-copy {
-      max-width: 620px;
-      padding-top: 36px;
+      position: relative;
+      max-width: 920px;
+      padding-top: 18px;
+      text-align: center;
+      margin: 0 auto;
+      z-index: 2;
     }
 
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(212, 175, 55, 0.35);
-      background: rgba(12, 18, 23, 0.38);
-      color: var(--gold-soft);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      font-size: 0.68rem;
-      margin-bottom: 22px;
-      box-shadow: inset 0 0 18px rgba(212, 175, 55, 0.08), 0 0 18px rgba(212, 175, 55, 0.06);
+    .hero-copy .eyebrow {
+      display: none;
     }
 
-    .eyebrow::before {
-      content: "◆";
-      font-size: 0.75rem;
-      color: var(--gold-2);
+    .hero-emblem {
+      height: clamp(180px, 26vh, 250px);
+      width: auto;
+      margin: 0 auto 10px;
+      object-fit: contain;
+      filter: drop-shadow(0 0 18px rgba(212, 175, 55, 0.22));
     }
 
     .hero h1 {
       font-family: "Spectral", Georgia, serif;
-      font-size: clamp(3.2rem, 6vw, 7.3rem);
-      line-height: 0.9;
-      letter-spacing: -0.06em;
+      font-size: clamp(2.2rem, 3vw, 4.1rem);
+      line-height: 1;
+      letter-spacing: 0.2em;
       font-weight: 500;
-      color: var(--text);
+      color: #f7e7b5;
       text-shadow: 0 0 25px rgba(212, 175, 55, 0.12);
-      margin-bottom: 18px;
+      margin: 0 0 8px;
+      text-transform: lowercase;
+    }
+
+    .hero-copy .project-tag {
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      margin: 0 auto 18px;
+      color: var(--gold-soft);
+      font-weight: 600;
+      line-height: 1.7;
+    }
+
+    .project-line {
+      display: block;
+      letter-spacing: 0.52em;
+      text-transform: uppercase;
+      font-size: 0.74rem;
+    }
+
+    .project-line--muted {
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      font-size: 0.62rem;
+      color: rgba(247, 231, 181, 0.96);
+      line-height: 1.9;
+    }
+
+    .hero-copy .hero-divider {
+      width: min(560px, 72%);
+      border: 0;
+      border-top: 1px solid rgba(212, 175, 55, 0.5);
+      margin: 18px auto 22px;
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.18);
+    }
+
+    .hero-copy .hero-title {
+      font-family: "Spectral", Georgia, serif;
+      font-size: clamp(2.4rem, 4vw, 4.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.05em;
+      color: #f7e7b5;
+      text-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
+      margin: 0 auto 10px;
+      max-width: 1100px;
+      font-weight: 500;
+    }
+
+    .hero-copy .hero-caption {
+      max-width: 760px;
+      margin: 0 auto;
+      font-size: clamp(1rem, 1.5vw, 1.42rem);
+      line-height: 1.45;
+      color: rgba(246, 241, 232, 0.9);
+      font-weight: 300;
     }
 
     .hero-copy p {
@@ -896,7 +1036,24 @@
     }
 
     .footer-brand .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Spectral", Georgia, serif;
       font-size: 1rem;
+      letter-spacing: 0.08em;
+      color: var(--gold-soft);
+      text-transform: uppercase;
+      text-shadow: 0 0 18px rgba(212, 175, 55, 0.18);
+      line-height: 1;
+    }
+
+    .footer-brand .brand img {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 16px rgba(212, 175, 55, 0.34));
     }
 
     .footer-brand p {
@@ -949,6 +1106,54 @@
       transform: translateY(0);
     }
 
+    @media (max-width: 1200px) {
+      .site-header .nav-shell {
+        border-radius: 999px;
+      }
+
+      .site-header .brand {
+        flex-basis: 190px;
+        min-width: 190px;
+      }
+
+      .main-nav {
+        position: absolute;
+        top: calc(100% + 8px);
+        right: 0;
+        left: 0;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        padding: 10px;
+        border: 0;
+        border-radius: 20px;
+        background: rgba(5, 9, 13, 0.96);
+        box-shadow: 0 18px 36px rgba(0, 0, 0, 0.35);
+      }
+
+      .main-nav.open {
+        display: flex;
+      }
+
+      .nav-item {
+        justify-content: flex-start;
+        width: 100%;
+      }
+
+      .nav-tools {
+        border-left: 0;
+        padding-left: 0;
+        gap: 8px;
+      }
+
+      .menu-toggle {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
     @media (max-width: 980px) {
       .hero-inner {
         grid-template-columns: 1fr;
@@ -980,7 +1185,7 @@
         flex-direction: column;
         align-items: flex-start;
         background: rgba(7, 12, 16, 0.82);
-        border: 1px solid rgba(212, 175, 55, 0.2);
+        border: 0;
         border-radius: 18px;
         padding: 16px 18px;
         box-shadow: 0 18px 36px rgba(0, 0, 0, 0.2);
@@ -992,10 +1197,6 @@
 
       .menu-toggle {
         display: inline-flex;
-      }
-
-      .nav-shell {
-        border-radius: 24px;
       }
 
       .cats {
@@ -1018,6 +1219,38 @@
 
       .hero {
         min-height: auto;
+      }
+    }
+
+    @media (max-width: 520px) {
+      .site-header .nav-shell {
+        width: calc(100% - 20px);
+        padding: 6px 12px;
+      }
+
+      .site-header .brand {
+        flex-basis: 118px;
+        min-width: 118px;
+        padding-right: 4px;
+      }
+
+      .site-header .brand img {
+        width: 21px;
+        height: 34px;
+      }
+
+      .site-header .brand-copy .brand-sub {
+        display: none;
+      }
+
+      .nav-tools {
+        gap: 4px;
+      }
+
+      .tool-btn,
+      .menu-toggle {
+        width: 28px;
+        height: 28px;
       }
     }
 
@@ -1049,17 +1282,35 @@
 
   <header class="site-header">
     <div class="nav-shell">
-      <a class="brand" href="/" onclick="window.location.reload(); return false;"><img src="static/logo.png" alt=""
-          onerror="this.style.visibility='hidden'">RA’AE</a>
-      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav">Menu</button>
+      <a class="brand" href="/" onclick="window.location.reload(); return false;">
+        <img src="static/logo.png" alt="RA’AE logo" onerror="this.style.visibility='hidden'">
+        <span class="brand-copy">
+          <span class="brand-name">ra·ae</span>
+          <span class="brand-sub">Project</span>
+        </span>
+      </a>
+
       <nav class="main-nav" id="main-nav" aria-label="Main navigation">
-        <a href="#about">About Us</a>
-        <a href="#products">Products</a>
-        <a href="#paths">Begin The Journey</a>
-        <a href="#footer">Contact Us</a>
-        <!-- <a href="#paths">Calendar</a>
-        <a href="#paths">Research</a> -->
+        <a class="nav-item active" href="#top"><span class="nav-icon">⌂</span><span>Home</span></a>
+        <a class="nav-item" href="#about"><span class="nav-icon">✦</span><span>Research</span></a>
+        <a class="nav-item" href="#products"><span class="nav-icon">▣</span><span>Publications</span></a>
+        <a class="nav-item" href="#paths"><span class="nav-icon">✧</span><span>Astronomical Events</span></a>
+        <a class="nav-item" href="#paths"><span class="nav-icon">◫</span><span>Education</span></a>
+        <a class="nav-item" href="#paths"><span class="nav-icon">♜</span><span>Cultural Heritage</span></a>
       </nav>
+
+      <div class="nav-tools" aria-label="Quick actions">
+        <button class="tool-btn" type="button" aria-label="Search">⌕</button>
+        <button class="tool-btn" type="button" aria-label="Language">◌</button>
+        <button class="tool-btn login-btn" type="button" aria-label="Log in" title="Log in">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
+            <path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
+            <path d="M17 8h4m-2-2v4"></path>
+          </svg>
+        </button>
+        <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
+      </div>
     </div>
   </header>
 
@@ -1067,24 +1318,16 @@
     <section class="hero">
       <div class="container hero-inner">
         <div class="hero-copy">
-          <div class="eyebrow">Ancient sky • modern science</div>
-          <h1>RA’AE</h1>
-          <p>The sky, written in stone. Reconstructing the ancient Egyptian cosmos to show how the heavens shaped Egypt
-          </p>
-          <div class="cta-row">
-            <a class="btn primary" href="#products">Explore the archive</a>
-            <a class="btn" href="#about">Learn more</a>
-          </div>
+          <img class="hero-emblem" src="/static/logo.png" alt="" aria-hidden="true">
 
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="planet-shell"></div>
-          <div class="planet-shell shell-2"></div>
-          <div class="planet-shell shell-3"></div>
-          <div class="planet-glow"></div>
-          <div class="planet-sat"></div>
-          <div class="planet-sat s2"></div>
-          <div class="planet-sat s3"></div>
+          <h1>ra·ae</h1>
+          <div class="project-tag">
+            <span class="project-line">Project</span>
+            <span class="project-line project-line--muted">Research in Archaeoastronomy,<br>Architecture and Egyptology</span>
+          </div>
+          <div class="hero-divider" aria-hidden="true"></div>
+          <div class="hero-title"><strong>The Sky, Written in Eternal Stone</strong></div>
+          <p class="hero-caption">Reconstructing the Ancient Egyptian Cosmos<br>to Reveal How the Sky Shaped Ancient Egypt</p>
         </div>
       </div>
       <div class="scroll-indicator" aria-hidden="true"></div>
@@ -1099,10 +1342,10 @@
           <span>𓁹</span>
           <span>𓏏</span>
         </div>
-        <h2>Research in archaeoastronomy, architecture and Egyptology</h2>
+        <h2>Research in archaeoastronomy, architecture and Egyptology.</h2>
         <div class="meta" lang="en" dir="ltr">Research in archaeoastronomy, architecture, and Egyptology</div>
         <p>Explore reconstructed skies, ancient texts and monuments in one place, and the digital products built from
-          them</p>
+          them.</p>
       </div>
     </section>
 
@@ -1164,13 +1407,13 @@
     </section>
   </main>
 
-  <footer class="site-footer" id="footer">
+  <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
         <div class="footer-brand">
           <a class="brand" href="/" onclick="window.location.reload(); return false;"><img src="static/logo.png" alt=""
               onerror="this.style.visibility='hidden'">RA’AE</a>
-          <p>Reconstructing the ancient Egyptian cosmos through research, digital storytelling, and cultural innovation
+          <p>Reconstructing the ancient Egyptian cosmos through research, digital storytelling, and cultural innovation.
           </p>
         </div>
         <div class="footer-col">
@@ -1185,7 +1428,7 @@
           <a href="#calendar">Calendar</a>
           <a href="#sky">Sky now</a>
         </div>
-        <div class="footer-col">
+        <div class="footer-col" id="footer-contact">
           <h4>Contact</h4>
           <span>raae@raae.example</span>
           <span>+20 123 456 7890</span>
@@ -1194,7 +1437,7 @@
       </div>
       <div class="footer-bottom">
         <span>© 2025 RA’AE</span>
-        <span>Designed for science, heritage, and discovery</span>
+        <span>Designed for science, heritage, and discovery.</span>
       </div>
     </div>
   </footer>
