@@ -1302,13 +1302,15 @@
       <div class="nav-tools" aria-label="Quick actions">
         <button class="tool-btn" type="button" aria-label="Search">⌕</button>
         <button class="tool-btn" type="button" aria-label="Language">◌</button>
-        <button class="tool-btn login-btn" type="button" aria-label="Log in" title="Log in">
+        {% if not is_logged_in %}
+        <a class="tool-btn login-btn" href="/auth/login" aria-label="Log in" title="Log in">
           <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
             <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"></path>
             <path d="M4.5 20a7.5 7.5 0 0 1 15 0"></path>
             <path d="M17 8h4m-2-2v4"></path>
           </svg>
-        </button>
+        </a>
+        {% endif %}
         <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">☰</button>
       </div>
     </div>

@@ -20,3 +20,5 @@ mutagen
 slowapi
 reportlab
 numpy
+itsdangerous
+google-auth
