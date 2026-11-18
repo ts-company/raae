@@ -1,10 +1,155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05090d">
+  <title>Create an account | RA’AE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Spectral:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/auth.css">
 </head>
 <body>
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <a class="auth-brand" href="/" aria-label="RA’AE home">
+        <img src="/static/logo.png" alt="">
+        <span>ra·ae<small>Project platform</small></span>
+      </a>
 
+      <div class="auth-heading">
+        <p class="auth-kicker">Join our cosmic journey</p>
+        <h1 id="auth-title">Create your account</h1>
+      </div>
+
+      <form class="auth-form" id="signup-form">
+        <div class="auth-name-fields">
+          <label class="auth-field">
+            <span>First name</span>
+            <input type="text" name="first_name" autocomplete="given-name" maxlength="50" placeholder="First name" required>
+          </label>
+          <label class="auth-field">
+            <span>Last name</span>
+            <input type="text" name="last_name" autocomplete="family-name" maxlength="50" placeholder="Last name" required>
+          </label>
+        </div>
+        <label class="auth-field">
+          <span>Email address</span>
+          <input type="email" name="email" autocomplete="email" maxlength="100" placeholder="you@example.com" required>
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input type="password" name="password" autocomplete="new-password" minlength="8" placeholder="At least 8 characters" required>
+        </label>
+        <label class="auth-field">
+          <span>Confirm password</span>
+          <input type="password" name="confirm_password" autocomplete="new-password" minlength="8" placeholder="Enter your password again" required>
+        </label>
+        <p class="auth-message" id="signup-message" role="status" aria-live="polite" hidden></p>
+        <button class="auth-submit" id="signup-submit" type="submit">Create account</button>
+      </form>
+
+      {% if google_client_id %}
+      <div class="auth-or"><span>or continue with</span></div>
+      <div class="google-button" id="google-button" data-client-id="{{ google_client_id }}"></div>
+      <p class="auth-message" id="google-message" role="status" aria-live="polite" hidden></p>
+      {% endif %}
+
+      <p class="auth-switch">Already have an account? <a href="/auth/login">Log in</a></p>
+      <a class="auth-home" href="/">Back to home</a>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("signup-form");
+    const message = document.getElementById("signup-message");
+    const submitButton = document.getElementById("signup-submit");
+
+    function showMessage(element, text, isError = true) {
+      element.textContent = text;
+      element.dataset.state = isError ? "error" : "success";
+      element.hidden = false;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.hidden = true;
+      const data = new FormData(form);
+      const password = data.get("password");
+      if (password !== data.get("confirm_password")) {
+        showMessage(message, "The passwords do not match.");
+        return;
+      }
+
+      submitButton.disabled = true;
+      submitButton.textContent = "Creating account…";
+      try {
+        const response = await fetch("/auth/get_signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            first_name: data.get("first_name"),
+            last_name: data.get("last_name"),
+            email: data.get("email"),
+            password
+          })
+        });
+
+        if (!response.ok) {
+          const errors = {
+            400: "An account with this email already exists.",
+            429: "Too many attempts. Please wait and try again."
+          };
+          throw new Error(errors[response.status] || "We couldn't create your account. Please try again.");
+        }
+
+        const result = await response.json();
+        if (!result.success) {
+          throw new Error("We couldn't create your account. Please try again.");
+        }
+        window.location.assign("/");
+      } catch (error) {
+        showMessage(message, error.message || "Unable to connect. Please try again.");
+        submitButton.disabled = false;
+        submitButton.textContent = "Create account";
+      }
+    });
+
+    const googleButton = document.getElementById("google-button");
+    if (googleButton) {
+      window.initializeGoogleSignIn = function () {
+        google.accounts.id.initialize({
+          client_id: googleButton.dataset.clientId,
+          callback: async ({ credential }) => {
+            const googleMessage = document.getElementById("google-message");
+            try {
+              const response = await fetch("/auth/google", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ credential })
+              });
+              if (!response.ok) {
+                throw new Error("Google sign-in failed. Please try again.");
+              }
+              window.location.assign("/");
+            } catch (error) {
+              showMessage(googleMessage, error.message || "Unable to connect. Please try again.");
+            }
+          }
+        });
+        google.accounts.id.renderButton(googleButton, {
+          theme: "outline",
+          shape: "pill",
+          size: "large",
+          text: "signup_with",
+          width: 280
+        });
+      };
+    }
+  </script>
+  {% if google_client_id %}
+  <script src="https://accounts.google.com/gsi/client" onload="initializeGoogleSignIn()" async defer></script>
+  {% endif %}
 </body>
 </html>

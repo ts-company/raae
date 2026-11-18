@@ -1,10 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05090d">
+  <title>Log in | RA’AE</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Spectral:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/auth.css">
 </head>
 <body>
+  <main class="auth-shell">
+    <section class="auth-card" aria-labelledby="auth-title">
+      <a class="auth-brand" href="/" aria-label="RA’AE home">
+        <img src="/static/logo.png" alt="">
+        <span>ra·ae<small>Project platform</small></span>
+      </a>
 
+      <div class="auth-heading">
+        <p class="auth-kicker">Welcome back</p>
+        <h1 id="auth-title">Log in to your account</h1>
+      </div>
+
+      <form class="auth-form" id="login-form">
+        <label class="auth-field">
+          <span>Email address</span>
+          <input type="email" name="email" autocomplete="email" maxlength="100" placeholder="you@example.com" required>
+        </label>
+        <label class="auth-field">
+          <span>Password</span>
+          <input type="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
+        </label>
+        <p class="auth-message" id="login-message" role="status" aria-live="polite" hidden></p>
+        <button class="auth-submit" id="login-submit" type="submit">Log in</button>
+      </form>
+
+      {% if google_client_id %}
+      <div class="auth-or"><span>or continue with</span></div>
+      <div class="google-button" id="google-button" data-client-id="{{ google_client_id }}"></div>
+      <p class="auth-message" id="google-message" role="status" aria-live="polite" hidden></p>
+      {% endif %}
+
+      <p class="auth-switch">New to RA’AE? <a href="/auth/signup">Create an account</a></p>
+      <a class="auth-home" href="/">Back to home</a>
+    </section>
+  </main>
+
+  <script>
+    const form = document.getElementById("login-form");
+    const message = document.getElementById("login-message");
+    const submitButton = document.getElementById("login-submit");
+
+    function showMessage(element, text, isError = true) {
+      element.textContent = text;
+      element.dataset.state = isError ? "error" : "success";
+      element.hidden = false;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      message.hidden = true;
+      submitButton.disabled = true;
+      submitButton.textContent = "Logging in…";
+
+      const data = new FormData(form);
+      try {
+        const response = await fetch("/auth/login_data", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: data.get("email"),
+            password: data.get("password")
+          })
+        });
+
+        if (!response.ok) {
+          const errors = {
+            404: "The email or password is incorrect.",
+            406: "This account uses Google sign-in. Please continue with Google.",
+            429: "Too many attempts. Please wait a minute and try again."
+          };
+          throw new Error(errors[response.status] || "We couldn't log you in. Please try again.");
+        }
+
+        window.location.assign("/");
+      } catch (error) {
+        showMessage(message, error.message || "Unable to connect. Please try again.");
+        submitButton.disabled = false;
+        submitButton.textContent = "Log in";
+      }
+    });
+
+    const googleButton = document.getElementById("google-button");
+    if (googleButton) {
+      window.initializeGoogleSignIn = function () {
+        google.accounts.id.initialize({
+          client_id: googleButton.dataset.clientId,
+          callback: async ({ credential }) => {
+            const googleMessage = document.getElementById("google-message");
+            try {
+              const response = await fetch("/auth/google", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ credential })
+              });
+              if (!response.ok) {
+                throw new Error("Google sign-in failed. Please try again.");
+              }
+              window.location.assign("/");
+            } catch (error) {
+              showMessage(googleMessage, error.message || "Unable to connect. Please try again.");
+            }
+          }
+        });
+        google.accounts.id.renderButton(googleButton, {
+          theme: "outline",
+          shape: "pill",
+          size: "large",
+          text: "continue_with",
+          width: 280
+        });
+      };
+    }
+  </script>
+  {% if google_client_id %}
+  <script src="https://accounts.google.com/gsi/client" onload="initializeGoogleSignIn()" async defer></script>
+  {% endif %}
 </body>
 </html>
